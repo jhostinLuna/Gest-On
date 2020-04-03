@@ -10,3 +10,5 @@ Diagrama de Estados (Creado, Asignado, Pendiente de aprovado, completado)
 Creo El diagrama de Entidad Relación:  
 
 ![diagramaER](images/Captura3.JPG)
+- Tablero Kanban Actual:  
+![Kanban](images/Captura4.JPG)
