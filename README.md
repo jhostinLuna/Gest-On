@@ -2,5 +2,5 @@
 Gestor de Incidencias
 
 ## Planificacion Proyecto  
-![planificacion](images/captura1.JPG)  
-![diagrama](images/captura2.JPG)
+![planificacion](images/Captura1.JPG)  
+![diagrama](images/Captura2.JPG)
