@@ -12,3 +12,5 @@ Creo El diagrama de Entidad Relación:
 ![diagramaER](images/Captura3.JPG)
 - Tablero Kanban Actual:  
 ![Kanban](images/Captura4.JPG)
+**Trabajo de 04/04/2020**  
+![kanban](images/Captura5.JPG)
