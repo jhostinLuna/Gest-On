@@ -14,3 +14,5 @@ Creo El diagrama de Entidad Relación:
 ![Kanban](images/Captura4.JPG)
 **Trabajo de 04/04/2020**  
 ![kanban](images/Captura5.JPG)
+Diagrama de clases:  
+![diagramaClases](images/Captura6.JPG)
