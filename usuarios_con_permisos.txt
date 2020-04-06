@@ -1,0 +1,4 @@
+DROP USER IF EXISTS 'gestion';
+CREATE USER IF NOT EXISTS 'gestion'@'localhost' IDENTIFIED BY 'Nohay2sin3';
+
+GRANT SELECT,UPDATE,DELETE,INSERT ON gestion.* TO 'gestion'@'localhost';

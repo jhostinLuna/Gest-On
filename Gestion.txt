@@ -1,0 +1,44 @@
+DROP TABLE IF EXISTS departamentos;
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS incidencias;
+
+CREATE TABLE IF NOT EXISTS 
+usuarios (
+    dni varchar(9) NOT NULL,
+    nombre varchar(9) NOT NULL,
+    apellidos varchar(20) NOT NULL,
+    correo varchar(30) NOT NULL,
+    tipo varchar(2) NOT NULL,
+    clave varchar(12) NOT NULL,
+    id_deptno int(2) NOT NULL,
+    PRIMARY KEY (dni)
+);
+
+CREATE TABLE IF NOT EXISTS 
+departamentos(
+    id_deptno int(2) NOT NULL,
+    nombre varchar(15) NOT NULL,
+    admin varchar(9),
+    FOREIGN KEY (admin) REFERENCES usuarios(dni),
+    ciudad varchar(10) NOT NULL,
+    cp varchar(5) NOT NULL,    
+    PRIMARY KEY (id_deptno)
+);
+
+CREATE TABLE IF NOT EXISTS 
+incidencias (
+    id_inc int(5) PRIMARY KEY AUTO_INCREMENT,
+    asunto varchar(15) NOT NULL,
+    prioridad varchar(5) NOT NULL,
+    estado varchar(15) NOT NULL,
+    gestor varchar(9),
+    FOREIGN KEY (gestor) REFERENCES usuarios (dni) ON DELETE CASCADE,
+    f_creacion date NOT NULL,
+    dni varchar(9) NOT NULL,
+    FOREIGN KEY (dni) REFERENCES usuarios (dni) ON DELETE CASCADE,
+    id_deptno int(2) NOT NULL
+);
+
+ALTER TABLE incidencias ADD FOREIGN KEY (id_deptno) REFERENCES departamentos(id_deptno);
+
+
