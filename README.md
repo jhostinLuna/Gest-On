@@ -55,4 +55,7 @@ FOREIGN KEY (dni) REFERENCE usuario(dni) ON DELETE CASCADE|RESTRICT,
 FOREIGN KEY (gestor) REFERENCE usuario(dni) ON DELETE CASCADE|RESTRICT,  
 PRIMARY KEY (id_inc)  
 );  
-![kanban](./images/Captura7.JPG)
+![kanban](./images/Captura7.JPG)  
+**06/04/2020**  
+kanban hasta hoy:  
+![kanban](images/Captura8.JPG)  
