@@ -1,78 +1,48 @@
 <?php
-include_once "ConexionPDO.php";
+require_once "ConexionPDO.php";
+include_once "./modelo/Usuarios.php";
+include_once "./model/TablaIncidencias.php";
 class Modelo{
     private $pdo;
-    private $registros;
     public function __construct(){
         $this->pdo = ConexionPDO::singleton("gestion");
     }
-    public function createIncidencia($incidencia){
+//USUARIOS:
+    /*
+    Devuelve el array asociativo con datos de usuario que coincida con el dni 
+    pasado por parametro
+    */
+    public function existUsuario($dni){
+        $usuario = null;
+        try {
+            $query = "select * from usuarios WHERE dni = :dni";
+            $result = $this->pdo->prepare($query);
+            $result->execute($dni);
+            
+            
+        } catch (PDOException $e) {
+            echo "ERROR al acceder a la base de datos ".$e->getMessage();
+        }
+        return $result->fetchAll();
+    }
+    // Crea un tipo de usuario si es que la clave y dni coinciden ó NULL si no existe
+    public function accesoUsuario($dni,$clave){
+        $reg = $this->existUsuario($dni);
+        $reg = $reg[0];
+        $usuario = null;
+        $em = "Emisor";
+        $ge = "Gestor";
+        $ad = "Administrador";
         
-        try {
-            $query = "INSERT INTO incidencias (asunto,prioridad,estado,gestor,f_creacion,dni,id_deptno) VALUE(
-                :asunto,:prioridad,:estado,:gestor,:f_creacion,:dni,:id_deptno
-            )";
-            $result = $this->pdo->prepare($query);
-            $result->execute($incidencia);
-        } catch (PDOException $e) {
-            echo "ERROR en la sentencia crear incidencia".$e->getMessage();
+        if (!empty($reg)) {
+            if (strcmp($clave,$reg['clave'])) {
+                $usuario = new ${$reg['tipo']}($reg);
+            }   
         }
-        return $result->rowCount();
+        return $usuario;
     }
-    public function deleteIncidencia($incidencia){
-        try {
-            $query = "DELETE FROM incidencias WHERE id_inc = :id_inc
-            )";
-            $result = $this->pdo->prepare($query);
-            $result->execute($incidencia);
-        } catch (PDOException $e) {
-            echo "ERROR en la sentencia borrar incidencia".$e->getMessage();
-        }
-        return $result->rowCount();
-    }
-    
-    public function updateIncidencia($incidencia){
-        try {
-            $query = "UPDATE incidencia SET 
-                                    asunto = :asunto,
-                                    prioridad =:prioridad,
-                                    estado = :estado,
-                                    gestor = :gestor,
-                                    f_creacion = :f_creacion,
-                                    dni = :dni,
-                                    id_deptno = :id_deptno WHERE id_inc = :id_inc";
-            $result = $this->pdo->prepare($query);
-            $result->execute($incidencia);
-        } catch (PDOException $e) {
-                echo "ERROR actualizando la incidencia ".$e->getMessage();
-        }
-        return $result->rowCount();
-    }
-    public function cambiaEstado($estado){
-        try {
-            $query = "UPDATE incidencias SET
-                                    estado = :estado
-                                    WHERE id_inc = :id_inc";
-            $result = $this->pdo->prepare($query);
-            $result->execute($estado);
-        } catch (PDOException $e) {
-            echo "ERROR al camiar de estado \"Incidencia\"".$e->getMessage();
-        }
-        return $result->rowCount();
-    }
-    public function asignarGestor($gestor){
-        try {
-            $query = "UPDATE incidencia SET                                     
-                                    gestor = :gestor,
-                                    id_deptno = :id_deptno WHERE id_inc = :id_inc";
-            $result = $this->pdo->prepare($query);
-            $result->execute($gestor);
-        } catch (PDOException $e) {
-                echo "ERROR asignando un gestor \"incidencia\" ".$e->getMessage();
-        }
-        return $result->rowCount();
-    }
-    //USUARIOS:
+       
+    //Crea un usuario en base de datos Devuelve filas afectadas ó cero filas
     public function createUsuario($usuario){
         try {
             $query = "INSERT INTO usuarios VALUES(
@@ -92,39 +62,25 @@ class Modelo{
         }
         return $result->rowCount();
     }
-    public function deleteUsuario($dni){
+    //Devuelve array con todos los usuarios o un array vacio
+    public function getUsuarios(){
         try {
-            $query = "DELETE FROM usuarios WHERE dni = :dni
-            )";
+            $query = "SELECT dni nombre apellidos correo tipo id_deptno FROM usuarios";
             $result = $this->pdo->prepare($query);
-            $result->execute($dni);
+            $result->execute();
         } catch (PDOException $e) {
-            echo "ERROR al borrar un usuario".$e->getMessage();
+            echo "ERROR al leer registros de Usuarios ". $e->getMessage();
         }
-        return $result->rowCount();
+        return $result->fetchAll();
     }
-    public function updateUsuario($usuario){
-        try {
-            $query = "UPDATE usuarios SET 
-                                    nombre = :nombre,
-                                    apellidos = :apellidos,
-                                    correo = :correo,
-                                    tipo = :tipo,
-                                    clave = :clave,                                    
-                                    id_deptno = :id_deptno WHERE dni = :dni";
-            $result = $this->pdo->prepare($query);
-            $result->execute($usuario);
-        } catch (PDOException $e) {
-                echo "ERROR actualizando datos de usuario ".$e->getMessage();
-        }
-        return $result->rowCount();
-    }
+//DEPARTAMENTOS:
+    //Crea departamento en base de datos Devuelve cantidad de filas afectadas
     public function createDepartamento($departamento){
         try {
             $query = "INSERT INTO usuarios VALUES(
                 id_deptno = :id_deptno,
                 nombre = :nombre,
-                mgr = null,
+                adm = null,
                 ciudad = :ciudad,
                 cp = :cp
             )";
@@ -136,8 +92,30 @@ class Modelo{
         }
         return $result->rowCount();
     }
-    public function asignaAdministrador(){
-        
+    // Asigna administrador a un departamento tiene que existir antes el usuario administrador
+    public function asignaAdministrador($adm){
+        try {
+            $query = "UPDATE departamento SET 
+                                                                      
+                                    adm = :adm WHERE id_deptno = :id_deptno";
+            $result = $this->pdo->prepare($query);
+            $result->execute($adm);
+        } catch (PDOException $e) {
+                echo "ERROR al añadir jefe de departamento ".$e->getMessage();
+        }
+        return $result->rowCount();
+    }
+    public function getDeptno(){
+        try {
+            $query = "SELECT * FROM departamentos";
+            $result = $this->pdo->prepare($query);
+            $result->execute();
+        } catch (PDOException $e) {
+            echo "ERROR al leer registros de Usuarios ". $e->getMessage();
+        }
+        return $result->fetchAll();
     }
 }
+
+
 ?>

@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS
 departamentos(
     id_deptno int(2) NOT NULL,
     nombre varchar(15) NOT NULL,
-    admin varchar(9),
-    FOREIGN KEY (admin) REFERENCES usuarios(dni),
+    adm varchar(9),
+    FOREIGN KEY (adm) REFERENCES usuarios(dni),
     ciudad varchar(10) NOT NULL,
     cp varchar(5) NOT NULL,    
     PRIMARY KEY (id_deptno)
