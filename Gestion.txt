@@ -7,19 +7,20 @@ usuarios (
     dni varchar(9) NOT NULL,
     nombre varchar(9) NOT NULL,
     apellidos varchar(20) NOT NULL,
+    movil varchar(12) NOT NULL,
     correo varchar(30) NOT NULL,
     tipo varchar(2) NOT NULL,
     clave varchar(12) NOT NULL,
     id_deptno int(2) NOT NULL,
     PRIMARY KEY (dni)
 );
-
+insert into usuarios values('1000000x','root','admin','','','adm','Nohay2sin3',0);
 CREATE TABLE IF NOT EXISTS 
 departamentos(
     id_deptno int(2) NOT NULL,
     nombre varchar(15) NOT NULL,
-    adm varchar(9),
-    FOREIGN KEY (adm) REFERENCES usuarios(dni),
+    dni varchar(9),
+    FOREIGN KEY (dni) REFERENCES usuarios(dni),
     ciudad varchar(10) NOT NULL,
     cp varchar(5) NOT NULL,    
     PRIMARY KEY (id_deptno)

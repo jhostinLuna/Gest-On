@@ -1,23 +1,27 @@
 <?php
 
 class TablaIncidencias {
+    private $pdo;
     private $tabla;
     private $estado;
     private $prioridad;
     private $fecha;
     public function __construct(){
+        $this->pdo = ConexionPDO::singleton("gestion");
         $this->tabla = $this->iniciaTabla();
         
     }
     private function iniciaTabla(){
-        $ok = false;
+    
         try {
             $query = "SELECT * FROM incidencias";
             $result = $this->pdo->prepare($query);
-            $ok = $result->execute();
+            $result->execute();
+            $result->setFetchMode(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "ERROR al leer registros de incidencias ". $e->getMessage();
         }
+        
         return $result->fetchAll();
     }
     public function ordenEstado($orden){
@@ -76,6 +80,11 @@ class TablaIncidencias {
             (time($a['f_creacion']) > time($b['f_creacion']))? $aux = -1: $aux = 1;
         }
         
+    }
+    public function __get($propiedad) {
+        if(property_exists($this, $propiedad)) {
+            return $this->$propiedad;
+        }
     }
 }
 

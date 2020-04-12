@@ -5,12 +5,12 @@ class ConexionPDO {
     
     private function __construct($database){
         $dsn = "mysql:host=localhost;dbname=$database";
-        $this->id = new PDO($dsn,'gestion','Nohay2sin3');
+        $this->id = new PDO($dsn,'gest','Nohay2sin3');
     }
 
     public static function singleton($database){
         if (!isset(self::$instancia)) {
-            self::$instancia = new Conectar($database);        
+            self::$instancia = new ConexionPDO($database);        
         }
         return self::$instancia->id;
     }

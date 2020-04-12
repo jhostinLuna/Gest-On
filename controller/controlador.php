@@ -1,22 +1,44 @@
 <?php
 require_once "./model/modeloGestion.php";
+session_start();
+$content = "./vist/login.php";
 $mensaje;
 $modelo = new Modelo();
 $incidencias = new TablaIncidencias();
-if (isset($_POST['create_user'])) {
-    if ($modelo->createUsuario($usuario) === 0) {
-        $mensaje = "No se ha podido registrar el usuario";
-    }
-}
-if (isset($_GET['acceso']) && !isset($_SESSION['usuario'])) {
-    
-    if (($usuario = $modelo->accesoUsuario($_POST['dni'],$_POST['clave']))==null) {
-        $mensaje = "No se ha encontrado ningun usuario con dni ".$_POST['dni'] . 
-        " o la contraseña no coincide";
+if (isset($_POST['acceso'])) {
+    unset($_POST['acceso']);
+    $usuario = $modelo->accesoUsuario($_POST);
+    if ($usuario == null) {
+        $mensaje =="¡El usuario no existe o contraseña incorrecta!";
     }else{
+        $content = "./vist/inicio.php";
         $_SESSION['usuario'] = $usuario;
     }
 }
+if (isset($_SESSION['usuario']) && isset($_GET['inicio'])) {
+    $content = "./vist/inicio.php";
+}
+elseif (isset($_SESSION['usuario']) && isset($_GET['incidencias'])) {
+    $content = "./vist/incidencias.php";
+}
+elseif (isset($_SESSION['usuario']) && isset($_GET['opciones'])) {
+    $content = "./vist/opciones.php";
+}
+elseif (isset($_SESSION['usuario']) && isset($_GET['mensajes'])) {
+    $content = "./vist/mensajes.php";
+}
+if (isset($_POST['create_user'])) {
+    $_POST[':tipo'] = "em";
+    
+    unset($_POST['create_user']);
+    
+    if ($modelo->createUsuario($_POST) < 1) {
+        $mensaje = "No se ha podido registrar el usuario";
+    }else{
+        $mensaje = "¡te has registrado correctamente!";
+    }
+}
+
 
 if (isset($_POST['terminar_session'])) {
     $_SESSION['usuario'] = null;
@@ -40,4 +62,6 @@ if (isset($_POST['asignar_adm'])) {
         $mensaje = "No se ha podido asignar un administrador";
     }
 }
+
+include_once $content;
 ?>
