@@ -8,6 +8,9 @@
         table,td{
             border: 1px black solid;
         }
+        .ocu{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -35,6 +38,8 @@
     </tr>
 </thead>
 <tbody>
+    <tr><td class="ocu"><input type="hidden" value="hola" ></td></tr>hola
+    <tr><td class="ocu"><input type="hidden" value="hola" ></td></tr>
     <?php
     for ($i=0; $i < count($incidencias->tabla) ; $i++) { 
         echo "<tr>";

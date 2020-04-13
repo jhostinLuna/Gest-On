@@ -18,8 +18,7 @@ class Modelo{
             $query = "select * from usuarios WHERE dni = :dni";
             $result = $this->pdo->prepare($query);
             $result->execute($dni);
-            
-            
+            $result->setFetchMode(PDO::FETCH_ASSOC);            
         } catch (PDOException $e) {
             echo "ERROR al acceder a la base de datos ".$e->getMessage();
         }
@@ -28,7 +27,7 @@ class Modelo{
     }
     // Crea un tipo de usuario si es que la clave y dni coinciden ó NULL si no existe
     public function accesoUsuario($acceso){
-        $dni = $acceso[':dni'];
+        
         $clave = $acceso[':clave'];
         unset($acceso[':clave']);
         $reg = $this->existUsuario($acceso);
@@ -79,7 +78,18 @@ class Modelo{
     }
 //DEPARTAMENTOS:
     //Crea departamento en base de datos Devuelve cantidad de filas afectadas
-    
+    public function getDeptno(){
+        try {
+            $query = "select d.id_deptno,d.nombre as dnombre,d.ciudad,d.cp,u.nombre,u.apellidos,u.dni from departamentos d join usuarios u 
+            where d.dni is not null group by d.id_deptno";
+            $result = $this->pdo->prepare($query);
+            $result->execute();
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "ERROR al leer registros de Usuarios ". $e->getMessage();
+        }
+        return $result->fetchAll();
+    }
 }
 
 

@@ -74,8 +74,15 @@ class Gestor extends Usuario{
     }
 }
 class Administrador extends Usuario{
+    private $departamentos;
     public function __construct($registro) {
+        $this->departamentos = $this->getDeptno();
         parent::__construct($registro);
+    }
+    public function __get($propiedad) {
+        if(property_exists($this, $propiedad)) {
+            return $this->$propiedad;
+        }
     }
     public function createIncidencia($incidencia){
         $pdo = ConexionPDO::singleton("gestion");
@@ -161,6 +168,19 @@ class Administrador extends Usuario{
         }
         return $result->rowCount();
     }
+    public function crearAdmin($usuario){
+
+        $pdo = ConexionPDO::singleton("gestion");
+        try {
+            $query = "UPDATE usuarios SET                                     
+                                    tipo = 'ad' WHERE dni = :dni";
+            $result = $pdo->prepare($query);
+            $result->execute($usuario);
+        } catch (PDOException $e) {
+                echo "ERROR actualizando datos de usuario ".$e->getMessage();
+        }
+        return $result->rowCount();
+    }
     public function updateUsuario($usuario){
 
         $pdo = ConexionPDO::singleton("gestion");
@@ -180,12 +200,15 @@ class Administrador extends Usuario{
         return $result->rowCount();
     }
     public function createDepartamento($departamento){
+        $dep = end($this->departamentos);
+        $id = $dep['id_deptno'] + 10;
+        $departamento[':id_deptno'] = $id;
         $pdo = ConexionPDO::singleton("gestion");
         try {
-            $query = "INSERT INTO usuarios VALUES(
+            $query = "INSERT INTO departamentos VALUES(
                 :id_deptno,
                 :nombre,
-                null,
+                :dni,
                 :ciudad,
                 :cp
             )";
@@ -213,45 +236,20 @@ class Administrador extends Usuario{
     }
     public function getDeptno(){
         $pdo = ConexionPDO::singleton("gestion");
+        
         try {
-            $query = "SELECT * FROM departamentos";
+            $query = "select d.id_deptno,d.nombre as dnombre,d.ciudad,d.cp,u.nombre,u.apellidos,u.dni from departamentos d join usuarios u 
+            where d.dni is not null group by d.id_deptno";
             $result = $pdo->prepare($query);
             $result->execute();
+            $result->setFetchMode(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "ERROR al leer registros de Usuarios ". $e->getMessage();
         }
         return $result->fetchAll();
     }
-    public function pintaOpciones(){
-        
-        $content =  FOO
-        <label for="add_deptno">Crear departamento</label>
-        <input type="checkbox" name="add_deptno" id="add_deptno">
-        <div id="crear_deptno">
-            <form action="index.php" method="POST">
-                <label for=":id_deptno">Identificador: </label>
-                <input type="text" name=":id_deptno" ><br/>
-                <label for=":nombre">Nombre: </label>
-                <input type="text" name=":nombre"><br/>
-                <label for=":ciudad">Ciudad: </label>
-                <input type="text" name=":ciudad"><br/>
-                <label for=":cp">CP: </label>
-                <input type="text" name=":cp"><br/>
-                <input type="submit" name="crear">
-            </form>
-        </div>
-        <input type="checkbox" name="add_adm" id="add_adm">
-        <div id="asigna_adm">
-            <form action="index.php" method="POST">
-                <label for=":id_deptno">Identificador: </label>
-                <input type="text" name=":id_deptno" ><br/>
-                <label for=":dni">dni administrador</label>
-                <input type="text" name=":dni">
-                <input type="text">
-            </form>
-        </div>
-
-        FOO
-    }
+    
+    
+    
 }
 ?>

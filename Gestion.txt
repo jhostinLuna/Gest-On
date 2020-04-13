@@ -14,7 +14,7 @@ usuarios (
     id_deptno int(2) NOT NULL,
     PRIMARY KEY (dni)
 );
-insert into usuarios values('1000000x','root','admin','','','adm','Nohay2sin3',0);
+insert into usuarios values('1000000x','root','admin','','','ad','Nohay2sin3',0);
 CREATE TABLE IF NOT EXISTS 
 departamentos(
     id_deptno int(2) NOT NULL,

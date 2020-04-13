@@ -86,6 +86,19 @@ class TablaIncidencias {
             return $this->$propiedad;
         }
     }
+    public function cantidadE($estado){
+        $cont = 0;
+        for ($i=0; $i < count($this->tabla); $i++) { 
+            foreach ($this->tabla[$i] as $key => $value) {
+                if ($key == $estado) {
+                    $cont++;
+                }
+            }
+        }
+        return $cont;
+    }
+
+    
 }
 
 ?>
