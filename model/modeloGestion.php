@@ -87,7 +87,8 @@ class Modelo{
     //Devuelve array con todos los usuarios o un array vacio
     public function getUsuarios(){
         try {
-            $query = "SELECT id_usu, nombre, apellidos, movil, correo, tipo, id_deptno FROM usuarios";
+            $query = "SELECT u.nombre, u.apellidos,u. movil, u.correo, u.tipo,d.nombre as dnombre,
+            u.id_usu,u.id_deptno FROM usuarios u join departamentos d group by u.id_usu";
             $result = $this->pdo->prepare($query);
             $result->execute();
             $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -100,8 +101,11 @@ class Modelo{
     //Crea departamento en base de datos Devuelve cantidad de filas afectadas
     public function getDeptno(){
         try {
-            $query = "select d.id_deptno,d.nombre as dnombre,d.ciudad,d.cp,u.nombre,
-            u.apellidos,u.id_usu from departamentos d join usuarios u  group by d.id_deptno;";
+            $query = "select d.nombre as dnombre,d.ciudad,d.cp,case when (d.id_usu is null) 
+            then NULL else u.nombre end as nombre,case when (d.id_usu is null) 
+            then NULL else u.apellidos end as apellidos,d.id_usu,d.id_deptno from 
+            departamentos d join usuarios u on d.id_usu = u.id_usu or d.id_usu is null  
+            group by d.id_deptno";
             $result = $this->pdo->prepare($query);
             $result->execute();
             $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -123,7 +127,35 @@ class Modelo{
         }
         return $result->fetchAll();
     }
+    public function usuariosGestores(){
+        try {
+            $query = "select u.nombre,u.apellidos,d.nombre as dnombre,count(i.id_inc) as asignadas,u.id_usu from usuarios u  join incidencias i on u.id_usu = i.gestor join departamentos d on u.id_deptno = d.id_deptno  group by u.id_usu";
+            $result = $this->pdo->prepare($query);
+            $result->execute();
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "ERROR al leer registros Usuarios e Incidencias ". $e->getMessage();
+        }
+        return $result->fetchAll();
+    }
+    //select u.nombre,u.apellidos,d.nombre as dnombre,case when(count(i.id_inc)=1)then 0 end as asignadas,u.id_usu from usuarios u  join incidencias i on u.id_usu <> i.gestor join departamentos d on u.id_deptno = d.id_deptno  group by u.id_usu;
+    public function usuariosGestores2(){
+        try {
+            $query = "select u.nombre,u.apellidos,d.nombre as dnombre,
+            case when(count(i.id_inc)=1)then 0 end as asignadas,u.id_usu 
+            from usuarios u  join incidencias i on u.id_usu <> i.gestor 
+            join departamentos d on u.id_deptno = d.id_deptno  group by u.id_usu";
+            $result = $this->pdo->prepare($query);
+            $result->execute();
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "ERROR al leer registros Usuarios e Incidencias ". $e->getMessage();
+        }
+        return $result->fetchAll();
+    }
 }
+
+
 
 function filtrado($datos){
     

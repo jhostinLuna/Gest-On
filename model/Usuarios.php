@@ -2,7 +2,7 @@
 
 class Usuario{
     
-    private $pdo;
+    
     private $id_usu;
     private $nombre;
     private $apellidos;
@@ -20,7 +20,7 @@ class Usuario{
         $this->clave = $registro['clave'];
         $this->correo = $registro['correo'];
         $this->departamento = $registro['id_deptno'];
-        $this->pdo = ConexionPDO::singleton("gestion");
+        
     }
     public function __get($propiedad) {
         if(property_exists($this, $propiedad)) {
@@ -83,11 +83,11 @@ class Gestor extends Usuario{
     }
 }
 class Administrador extends Usuario{
-    private $departamentos;
+    private $pdo;
     public function __construct($registro) {
-        $this->departamentos = $this->getDeptno();
-        parent::__construct($registro);
         
+        parent::__construct($registro);
+        $this->pdo = ConexionPDO::singleton("gestion");
     }
     public function __get($propiedad) {
         if(property_exists($this, $propiedad)) {
@@ -233,7 +233,7 @@ class Administrador extends Usuario{
         try {
             $query = "UPDATE departamento SET 
                                                                       
-                                    adm = :id_usu WHERE id_deptno = :id_deptno";
+                                    id_usu = :id_usu WHERE id_deptno = :id_deptno";
             $result = $this->pdo->prepare($query);
             $result->execute($adm);
         } catch (PDOException $e) {
@@ -241,33 +241,8 @@ class Administrador extends Usuario{
         }
         return $result->rowCount();
     }
-    /*
-    public function getDeptno(){
-        
-        
-        try {
-            $query = "select d.id_deptno,d.nombre as dnombre,d.ciudad,d.cp,u.nombre,
-            u.apellidos,u.id_usu from departamentos d join usuarios u  group by d.id_deptno;";
-            $result = $this->pdo->prepare($query);
-            $result->execute();
-            $result->setFetchMode(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo "ERROR al leer registros de Usuarios ". $e->getMessage();
-        }
-        return $result->fetchAll();
-    }
-    */
-    public function getUsuariosGestores(){
-        try {
-            $query = "select u.*,count(i.id_inc) as asignadas from usuarios u  join incidencias i where u.id_usu = i.gestor  group by u.id_usu;;";
-            $result = $this->pdo->prepare($query);
-            $result->execute();
-            $result->setFetchMode(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo "ERROR al leer registros Usuarios e Incidencias ". $e->getMessage();
-        }
-        return $result->fetchAll();
-    }
+    
+    
     
 }
 ?>

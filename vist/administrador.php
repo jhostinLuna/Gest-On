@@ -1,11 +1,12 @@
 
         <div id="info_usu">
             <h2>Incidencias</h2>
-            <p>Pendientes de Asignar: <?php echo count($misIncidencias); ?></p>
-            <?php if(!empty($misIncidencias)): ?>
-            <form action="index.php" method="POST">
+            <p>Pendientes de Asignar: <?php echo count($incE1); ?></p>
+            <?php if(!empty($incE1)): ?>
+            <form action="index.php" id="form_asignar" method="POST">
+                
             <table>
-                <thead>
+                <thead class="oculto">
                 <tr>
                     <th>Referencia</th>
                     <th>Asunto</th>
@@ -19,27 +20,65 @@
                 </thead>
                 <tbody>
                     
-                    <?php
-                    for ($i=0; $i < count($misIncidencias); $i++) { 
-                        echo "<tr>";
-                        foreach ($misIncidencias as $value) {
-                            echo "<td>$value</td>";
-                        }
-                        echo "
-                        <td><input type=\"radio\" name=\":id_inc\" value=\"".$misIncidencias[$i]['id_inc']."\"></td>
-                        <td><input type=\"submit\" name=\"asignar\" value=\"asignar\"></td>
-                        </tr>";
-                        
-                    }
-                    ?>
-                    
+                <?php
+                for ($i=0; $i < count($incE1); $i++) { 
+                    echo "<tr>";
+                    echo "<td>".$incE1[$i]['id_inc']."</td>
+                    <td>".$incE1[$i]['asunto']."</td>
+                    <td>".$incE1[$i]['estado']."</td>
+                    <td>".$incE1[$i]['prioridad']."</td>
+                    <td>".$incE1[$i]['ges_nombre']."</td>
+                    <td>".$incE1[$i]['f_creacion']."</td>
+                    <td>".$incE1[$i]['autor']."</td>
+                    <td>".$incE1[$i]['dnombre']."</td>";
+                    echo "
+                    <td><input type=\"radio\" name=\":id_inc\" value=\"".$incE1[$i]['id_inc'].
+                    "\" id=\":id_inc$i\"><label for=\":id_inc$i\">asignar</label></td>                    
+                    </tr>";                    
+                }
+                ?>                    
                 </tbody>
             </table>
+            <h2>Gestores</h2>
+            
+            <table>
+            <thead>
+                <tr>
+                <td>nombre</td>
+                <td>apellidos</td>
+                <td>departamento</td>
+                <td>asignadas</td>
+                </tr>
+            </thead>
+            <tbody>
+            
+            <?php
+
+            for ($i=0; $i < count($gestores); $i++) { 
+                echo "<tr>";
+                    echo "<td>".$gestores[$i]['nombre']."</td>";
+                    echo "<td>".$gestores[$i]['apellidos']."</td>";
+                    echo "<td>".$gestores[$i]['dnombre']."</td>";
+                    echo "<td>".$gestores[$i]['asignadas']."</td>";
+                    echo "<td><input type=\"radio\" name=\":gestor\" value=\"".
+                    $gestores[$i]['id_usu']."\" id=\":id_usu$i\"><label for=\":id_usu$i\">asignar</label></td>";
+                echo "</tr>";
+                
+            }
+            
+            ?>
+                
+            </tbody>
+            </table>
             </form>
+            <button type="submit" name="asignar_inc" form="form_asignar" value="on">Asignar</button>
+            <?php if(isset($m_asig_inc)){
+                echo "<div><p>$m_asig_inc</p></div>";
+            } ?>
             <?php else:?>
             <div><p>No hay Incidencias creadas</p></div>
             <?php endif; ?>
-            <input type="checkbox" id="inc_revisar"><label for="inc_revisar"><h2>Resueltas</h2></label>
+            <input type="checkbox" id="inc_revisar"><label for="inc_revisar">Resueltas</label>
         </div>
         
         <div id="info_deptno">
@@ -50,15 +89,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>departamento</th>
                         
-                        <th>ciudad</th>
-                        
+                        <th>departamento</th>                        
+                        <th>ciudad</th>                        
                         <th>cp</th>
                         <th>administrador</th>
                         <th>apellidos</th>
-                        <th>id_Admin</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -66,11 +103,11 @@
                     
                     for ($i=0; $i < count($departamentos); $i++) { 
                         echo "<tr>";
-                        foreach ($departamentos[$i] as $value) {
-                        
-                            echo "<td>".$value."</td>";
-                            
-                        }
+                        echo "<td>".$departamentos[$i]['dnombre']."</td>";
+                        echo "<td>".$departamentos[$i]['ciudad']."</td>";
+                        echo "<td>".$departamentos[$i]['cp']."</td>";
+                        echo "<td>".$departamentos[$i]['nombre']."</td>";
+                        echo "<td>".$departamentos[$i]['apellidos']."</td>";
                         echo "</tr>";
                     }
                     
@@ -80,6 +117,7 @@
             <?php else: ?>
                 <div class="mensaje"><p>!Nohay departamentos departamentos creados¡</p></div>
             <?php endif; ?>
+            
         </div>
         <div id="crea_deptno">
             <h2>Crear departamento</h2>
@@ -106,47 +144,7 @@
             } ?>
             
         </div>
-        <div id="create_admin">
-            <h2>Cambiar de administrador</h2>
+        <div id="asignar_inc">
             
-                <table>
-                <thead>
-                    <tr><td>id</td>
-                    <td>nombre</td>
-                    <td>apellidos</td>
-                    <td>movil</td>
-                    <td>correo</td>
-                    <td>usuario/gestor</td>
-                    <td>id_deptno</td>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                    <?php
-
-                    for ($i=0; $i < count($usuarios); $i++) { 
-                        echo "<tr>";
-                        
-                        foreach ($usuarios[$i] as $value) {
-                            echo "<td>$value</td>";
-                        }
-                        echo "
-                        <td><form action=\"index.php\" name=\"update$i\" method=\"POST\">
-                        <input type=\"hidden\" name=\":id_usu\" value=\"".$usuarios[$i]['id_usu']."\">
-                        <input type=\"hidden\" name=\":id_deptno\" value=\"".$usuarios[$i]['id_deptno']."\">
-                        <input type=\"submit\" name=\"update_user\" value=\"asignar\">
-                        </form></td>                    
-                        </tr>";
-                    }
-                    //select u.*,count(i.id_inc) from usuarios u  join incidencias i where i.gestor=u.id_usu;
-                    //select u.nombre,count(i.id_inc) from usuarios u  join incidencias i where u.id_usu = i.gestor  group by u.id_usu;
-                    ?>
-                    
-                </tbody>
-                </table>
                 
         </div>
-
-        
-
-        

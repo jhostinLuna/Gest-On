@@ -20,6 +20,9 @@ $asinada = $incidencias->cantidadE(E2);
 $pdteApro = $incidencias->cantidadE(E3);
 $resuelta = $incidencias->cantidadE(E4);
 $orden = false;
+$gestores =array_merge($modelo->usuariosGestores(),$modelo->usuariosGestores2());
+$incE1 = $incidencias->getInc(E1);
+print_r($_POST);
 filtradoCompleto();
 if (isset($_POST['acceso'])) {
     $_POST[':correo'] = strtolower($_POST[':correo']);
@@ -46,10 +49,8 @@ if (isset($_POST['acceso'])) {
 if (isset($_SESSION['acceso']) ) {
     
     $usuario = $modelo->accesoUsuario($_SESSION['acceso']);
-    if (is_a($usuario,'Administrador')){
-        $misIncidencias = $incidencias->misIncidencias($usuario->id_usu,E1);
-    }
-    elseif (is_a($usuario,'Gestor')) {
+    
+    if (is_a($usuario,'Gestor')) {
         $misIncidencias = $incidencias->misIncidencias($usuario->id_usu);
         $incRevisar = $incidencias->misIncidencias($usuario->id_usu,E3);
     }
@@ -147,7 +148,16 @@ if (isset($_POST['crear_inc'])) {
     $usuario->createIncidencia($_POST);
     $misIncidencias = $incidencias->misIncidencias($usuario->id_usu);
 }
-
+if (isset($_POST['asignar_inc'])) {
+    $content = "./vist/inicio.php";
+    if (!isset($_POST[':id_usu']) || !isset($_POST[':id_usu'])) {
+        $m_asig_inc = "¡Tienes que elegir una incidencia y un usuario!";
+    }
+    if (!isset($m_asig_inc)) {
+        unset($_POST['asignar_inc']);
+        $usuario->asignaGestor($_POST);
+    }
+}
 $departamentos = $modelo->getDeptno();
 include_once $content;
 ?>

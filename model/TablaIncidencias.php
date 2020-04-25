@@ -14,8 +14,11 @@ class TablaIncidencias {
     private function iniciaTabla(){
         
         try {
-            $query = "select i.id_inc,i.asunto,i.prioridad,i.estado,i.gestor,i.f_creacion,i.id_usu,d.nombre 
-            from incidencias i join departamentos d where i.id_deptno = d.id_deptno";
+            $query = "select i.asunto,case when (i.prioridad is null) then null else i.prioridad 
+            end as prioridad,i.estado,i.gestor,case when(i.gestor is null) then null else u.nombre 
+            end as ges_nombre,i.f_creacion,i.id_inc,i.id_usu,u.nombre as autor,d.nombre as dnombre 
+            from incidencias i join departamentos d on i.id_deptno = d.id_deptno join usuarios 
+            u on u.id_usu = i.id_usu;";
             $result = $this->pdo->prepare($query);
             $result->execute();
             $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -123,7 +126,16 @@ class TablaIncidencias {
         
         return $nuevo;
     }
-    
+    public function getInc($estado){
+        $this->iniciaTabla();
+        $nuevo = null;
+        for ($i=0; $i < count($this->tabla); $i++) { 
+            if (strcmp($this->tabla[$i]['estado'],$estado) === 0 ) {
+                $nuevo[] = $this->tabla[$i];
+            }
+        }
+        return $nuevo;
+    }
 }
 
 ?>
