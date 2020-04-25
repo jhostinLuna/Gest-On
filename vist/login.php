@@ -9,16 +9,18 @@
 </head>
 <body>
 <main>
+    
+<header><h1>Login</h1></header>
     <div id="acceso">
     <form action="<?php $_SERVER['PHP_SELF'];?>" method="POST">
         <table>
             <tbody>
-            <tr><td><label for=":dni">Dni: </label></td>
-            <td><input type="text" name=":dni" id="dni"></td><?php if (isset($mensaje) && is_array($mensaje)) {
+            <tr><td><label for="log_correo">correo: </label></td>
+            <td><input type="text" name=":correo" id="log_correo"></td><?php if (isset($mensaje[0]) && is_array($mensaje)) {
                 echo "<td>".$mensaje[0]."</td>";
             } ?></tr>
-            <tr><td><label for=":clave">Contraseña: </label></td>
-            <td><input type="password" name=":clave" id="clave"></td><?php if (isset($mensaje) && is_array($mensaje)) {
+            <tr><td><label for="clave">Contraseña: </label></td>
+            <td><input type="password" name=":clave" id="clave"></td><?php if (isset($mensaje[1]) && is_array($mensaje)) {
                 echo "<td>".$mensaje[1]."</td>";
             } ?></tr>
             <tr><td><input type="submit" name="acceso" value="acceso"></td>
@@ -27,11 +29,12 @@
             
             </tbody>
         </table>
-        </form>
+    </form>
         <?php 
             if (isset($mensaje) && is_string($mensaje)) {
                     echo  "<div id=\"mensaje\"><p>$mensaje</p></div>";
             }
+            
             ?>
     </div>
 
@@ -39,18 +42,19 @@
 <form action="<?php $_SERVER['PHP_SELF'];?>" method="POST">
     <table>
         <tbody>
-            <tr><td><label for=":nombre">Nombre: </label></td><td><input type="text" name=":nombre" id="nombre"></td></tr>
-            <tr><td><label for=":apellidos">Apellidos: </label></td><td><input type="text" name=":apellidos" id="apellidos"></td></tr>
-            <tr><td><label for=":correo">correo: </label></td><td><input type="text" name=":correo" id="correo"></td></tr>
-            <tr><td><label for=":dni">Dni: </label></td><td><input type="text" name=":dni" id="dni_reg"></td></tr>
-            <tr><td><label for=":clave">Contraseña: </label></td><td><input type="password" name=":clave" id="clave_reg"></td></tr>
-            <tr><td><input type="checkbox" name=":tipo" value="ge"></td><td><label for=":tipo">Usuario: </label>.-</td></tr>
+            <tr><td><label for="nombre">Nombre: </label></td><td><input type="text" name=":nombre" id="nombre"></td></tr>
+            <tr><td><label for="apellidos">Apellidos: </label></td><td><input type="text" name=":apellidos" id="apellidos"></td></tr>
+            <tr><td><label for="movil">movil: </label></td><td><input type="text" name=":movil" id="movil"></td></tr>
+            <tr><td><label for="correo">correo: </label></td><td><input type="text" name=":correo" id="correo"></td></tr>
+            <tr><td><label for="clave">Contraseña: </label></td><td><input type="password" name=":clave" id="clave_reg"></td></tr>
+            <tr><td><input type="radio" name=":tipo" value="em" id="usu"></td><td><label for="usu">Usuario </label></td></tr>
+            <tr><td><input type="radio" name=":tipo" value="ge" id="ges"></td><td><label for="ges">Gestor </label></td></tr>
             <tr><td>departamento: </td>
                 <td>
                     <?php
                     echo "<select name=\":id_deptno\" id=\"id_deptno\">";
-                    for ($i=0; $i < count($departamentos); $i++) { 
-                        echo "<option value=\"".$departamentos[$i]['id_deptno']."\">".$departamentos[$i]['dnombre']."</option>";
+                    for ($i=0; $i < count($todoDeptno); $i++) { 
+                        echo "<option value=\"".$todoDeptno[$i]['id_deptno']."\">".$todoDeptno[$i]['nombre']."</option>";
                     }
                     echo "</select>";
 

@@ -8,13 +8,14 @@ class TablaIncidencias {
     private $fecha;
     public function __construct(){
         $this->pdo = ConexionPDO::singleton("gestion");
-        $this->tabla = $this->iniciaTabla();
+        $this->iniciaTabla();
         
     }
     private function iniciaTabla(){
-    
+        
         try {
-            $query = "SELECT * FROM incidencias";
+            $query = "select i.id_inc,i.asunto,i.prioridad,i.estado,i.gestor,i.f_creacion,i.id_usu,d.nombre 
+            from incidencias i join departamentos d where i.id_deptno = d.id_deptno";
             $result = $this->pdo->prepare($query);
             $result->execute();
             $result->setFetchMode(PDO::FETCH_ASSOC);
@@ -22,7 +23,8 @@ class TablaIncidencias {
             echo "ERROR al leer registros de incidencias ". $e->getMessage();
         }
         
-        return $result->fetchAll();
+        $this->tabla = $result->fetchAll();
+
     }
     public function ordenEstado($orden){
         $estados = array('Pdte.Asignar','Asignado','Pdte.Aprobado','Resuelto');
@@ -97,7 +99,30 @@ class TablaIncidencias {
         }
         return $cont;
     }
+    /*
+    Devuelve todas las incidencias si le pasan el segundo parametro y si no 
+    devuelve las del estado que le pasan como parametro y del usuario que las pide
+    */
 
+    public function misIncidencias($usuario,$estado = "*"){
+        $this->iniciaTabla();
+        $nuevo = null;
+        if ($estado =="*") {
+            for ($i=0; $i < count($this->tabla); $i++) { 
+                if (strcmp($this->tabla[$i]['id_usu'],$usuario) === 0) {
+                    $nuevo[] = $this->tabla[$i];
+                }
+            }
+        }else{
+            for ($i=0; $i < count($this->tabla); $i++) { 
+                if (strcmp($this->tabla[$i]['estado'],$estado) === 0 && strcmp($this->tabla[$i]['id_usu'],$usuario) === 0) {
+                    $nuevo[] = $this->tabla[$i];
+                }
+            }
+        }
+        
+        return $nuevo;
+    }
     
 }
 
