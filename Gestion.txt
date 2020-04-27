@@ -43,3 +43,12 @@ incidencias (
 ALTER TABLE incidencias ADD FOREIGN KEY (id_deptno) REFERENCES departamentos(id_deptno);
 
 
+CREATE TABLE IF NOT EXISTS mensajes ( 
+    id_men int(5) PRIMARY KEY AUTO_INCREMENT, id_rem int(5) NOT NULL, 
+    FOREIGN KEY (id_rem) REFERENCES usuarios(id_usu), 
+    id_dest int(5) NOT NULL,
+    FOREIGN KEY (id_dest) REFERENCES usuarios(id_usu),
+    mensaje varchar(300) NOT NULL, 
+    hora  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    leido varchar(1) DEFAULT 'n' NOT NULL
+);

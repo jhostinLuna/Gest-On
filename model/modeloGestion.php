@@ -153,6 +153,31 @@ class Modelo{
         }
         return $result->fetchAll();
     }
+    public function getMensajes($usuarios){
+        try {
+            $query = "select m.* from mensajes m 
+            join usuarios u on  m.id_rem = :id_rem and m.id_dest = :id_dest
+            ";
+            $result = $this->pdo->prepare($query);
+            $result->execute($usuarios);
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "ERROR al leer registros Usuarios e Incidencias ". $e->getMessage();
+        }
+        return $result->fetchAll();
+    }
+    public function menLeido($usuarios){
+        try {
+            $query = "UPDATE mensajes SET 
+                                    leido = 'y' WHERE id_rem = :id_rem and id_dest = :id_dest and leido = 'n'";
+            $result = $this->pdo->prepare($query);
+            $result->execute($usuarios);
+        } catch (PDOException $e) {
+                echo "ERROR actualizando la incidencia ".$e->getMessage();
+        }
+        return $result->rowCount();
+    }
+
 }
 
 

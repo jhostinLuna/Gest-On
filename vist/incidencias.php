@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Incidencias</title>
     <style>
-        table,td{
-            border: 1px black solid;
+        .col {
+            display: inline-block;
+                       
         }
-        .ocu{
-            display: none;
+        .row,.thead {   
+            display: flex;
+            justify-content:space-around;
+            align-items:flex-start;         
+            border-bottom: 1px black solid;
         }
+        .col {
+            flex-basis: 10%;
+        }
+        
     </style>
 </head>
 <body>
@@ -24,33 +32,41 @@
         </ul>
     </nav>
     </header>
-<table>
-<thead>
-    <tr>
-        <th>Referencia</th>
-        <th>Asunto</th>
-        <th>Estado</th>
-        <th>Prioridad</th>
-        <th>Asignado a</th>
-        <th>Fecha</th>
-        <th>Creado por</th>
-        <th>Departamento</th>
-    </tr>
-</thead>
-<tbody>
-    <tr><td class="ocu"><input type="hidden" value="hola" ></td></tr>hola
-    <tr><td class="ocu"><input type="hidden" value="hola" ></td></tr>
+<div>
+<div class="thead">
+    
+        <div class="col">Referencia</div>
+        <div class="col">Asunto</div>
+        <div class="col">Estado</div>
+        <div class="col">Prioridad</div>
+        <div class="col">Asignado a</div>        
+        <div class="col">Creado por</div>
+        <div class="col">Departamento</div>
+        <div class="col">Fecha</div>
+    
+</div>
+<div class="tbody">
+    
     <?php
     for ($i=0; $i < count($incidencias->tabla) ; $i++) { 
-        echo "<tr>";
-        foreach ($incidencias->tabla[$i] as $value) {
-            echo "<td>$value</td>";
-        }
-        echo "</tr>";
+        echo "<div class=\"row\">";
+        
+        echo "<div class=\"col\">".$incidencias->tabla[$i]['id_inc']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['asunto']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['estado']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['prioridad']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['ges_nombre']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['autor']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['dnombre']."</div>
+        <div class=\"col\">".$incidencias->tabla[$i]['f_creacion']."</div>
+
+        ";
+        
+        echo "</div>";
     }
     
 ?>
-</tbody>
-</table>
+</div>
+</div>
 </body>
 </html>

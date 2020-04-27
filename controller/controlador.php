@@ -22,7 +22,7 @@ $resuelta = $incidencias->cantidadE(E4);
 $orden = false;
 $gestores =array_merge($modelo->usuariosGestores(),$modelo->usuariosGestores2());
 $incE1 = $incidencias->getInc(E1);
-print_r($_POST);
+
 filtradoCompleto();
 if (isset($_POST['acceso'])) {
     $_POST[':correo'] = strtolower($_POST[':correo']);
@@ -150,14 +150,24 @@ if (isset($_POST['crear_inc'])) {
 }
 if (isset($_POST['asignar_inc'])) {
     $content = "./vist/inicio.php";
-    if (!isset($_POST[':id_usu']) || !isset($_POST[':id_usu'])) {
-        $m_asig_inc = "¡Tienes que elegir una incidencia y un usuario!";
+    if (!isset($_POST[':id_usu']) || !isset($_POST[':id_usu']) || !isset($_POST[':prioridad'])) {
+        $m_asig_inc = "¡Tienes que elegir una INCIDENCIA, PRIORIDAD Y UN GESTOR !";
     }
     if (!isset($m_asig_inc)) {
         unset($_POST['asignar_inc']);
         $usuario->asignaGestor($_POST);
     }
 }
+
+if (isset($_POST['chat'])) {
+    unset($_POST['chat']);
+    $_POST[':id_rem'] = $usuario->id_usu;
+    $m_rem = $modelo->getMensajes(array($_POST));
+    
+    $aux = array(':id_rem'=>$_POST[':id_dest'],':id_dest'=>$usuario->id_usu );
+    $m_dest = $modelo->getMensajes($aux);
+}
+
 $departamentos = $modelo->getDeptno();
 include_once $content;
 ?>

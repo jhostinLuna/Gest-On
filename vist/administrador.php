@@ -4,7 +4,15 @@
             <p>Pendientes de Asignar: <?php echo count($incE1); ?></p>
             <?php if(!empty($incE1)): ?>
             <form action="index.php" id="form_asignar" method="POST">
-                
+            <h3>Prioridad: </h3>
+            <input type="radio" name=":prioridad" value="<?php echo P1;  ?>" id="p1" >
+            <label for="p1">BAJA</label>
+            <input type="radio" name=":prioridad" value="<?php echo P2;  ?>" id="p2" >
+            <label for="p2">MEDIA</label>
+            <input type="radio" name=":prioridad" value="<?php echo P3;  ?>" id="p3" >
+            <label for="p3">ALTA</label>
+
+            
             <table>
                 <thead class="oculto">
                 <tr>
