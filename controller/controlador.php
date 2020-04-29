@@ -159,15 +159,23 @@ if (isset($_POST['asignar_inc'])) {
     }
 }
 
-if (isset($_POST['chat'])) {
-    unset($_POST['chat']);
-    $_POST[':id_rem'] = $usuario->id_usu;
-    $m_rem = $modelo->getMensajes(array($_POST));
+if (isset($_GET['chat'])) {
+    unset($_GET['chat']);
+    $_GET[':id_rem'] = $usuario->id_usu;
+    $modelo->menLeido($_GET);
     
-    $aux = array(':id_rem'=>$_POST[':id_dest'],':id_dest'=>$usuario->id_usu );
+    $m_rem = $modelo->getMensajes($_GET);    
+    $aux = array(':id_rem'=>$_GET[':id_dest'],':id_dest'=>$usuario->id_usu );
     $m_dest = $modelo->getMensajes($aux);
+    $content = "./vist/mensajes.php";
 }
+if (isset($_POST['enviar_men'])) {
+    unset($_POST['enviar_men']);
+    $_POST[':id_rem'] = $usuario->id_usu;
+    $modelo->enviarMensaje($_POST);
+    $content = "./vist/mensajes.php";
 
+}
 $departamentos = $modelo->getDeptno();
 include_once $content;
 ?>

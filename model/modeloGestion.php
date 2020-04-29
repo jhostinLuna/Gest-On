@@ -173,7 +173,21 @@ class Modelo{
             $result = $this->pdo->prepare($query);
             $result->execute($usuarios);
         } catch (PDOException $e) {
-                echo "ERROR actualizando la incidencia ".$e->getMessage();
+                echo "ERROR actualizar estado mensaje en base de datos ".$e->getMessage();
+        }
+        return $result->rowCount();
+    }
+    public function enviarMensaje($mensaje){
+        try {
+            $query = "INSERT INTO mensajes (id_rem,id_dest,mensaje) VALUES (
+                                    id_rem = :id_rem
+                                    id_dest = :id_dest
+                                    mensaje = :mensaje
+                                    ";
+            $result = $this->pdo->prepare($query);
+            $result->execute($mensaje);
+        } catch (PDOException $e) {
+                echo "ERROR actualizar estado mensaje en base de datos ".$e->getMessage();
         }
         return $result->rowCount();
     }
@@ -195,4 +209,5 @@ function filtradoCompleto(){
         $_POST[$key] = filtrado($value);
     }
 }
+
 ?>

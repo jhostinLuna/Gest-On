@@ -9,14 +9,16 @@
 <body>
     <div class="contactos">
         <?php
+        
         for ($i=0; $i < count($misIncidencias); $i++) {
             if ($misIncidencias[$i]['gestor']!=null) {
-                echo "<a href=\"index.php?chat=on&gestor=".$misIncidencias[$i]['gestor']."\"><div><i class=\"fas fa-user-cog\"></i><span>".$misIncidencias[$i]['ges_nombre']."</span></div></a>";
+                $indice = array_search($misIncidencias[$i]['gestor'],array_column($gestores,'id_usu'));
+                echo "<a href=\"index.php?chat=on&:id_dest=".$misIncidencias[$i]['gestor']."\"><div><i class=\"fas fa-user-cog\"></i><span>".$gestores[$indice]['nombre']."</span></div></a>";
 
             }
         }
         ?>
-
+    <?php if (isset($m_rem) && isset($m_dest)): ?>
     </div>
     <div id="contenedor">
         <div id="chat">
@@ -37,10 +39,12 @@
             </div>
         <?php endfor; ?>
         </div>
-        <form action="index.php">
+        <form action="index.php" method="POST">
             <textarea name=":mensaje" id=":mensaje" placeholder="Ingresa tu mensaje"></textarea>
-            <input type="submit" name="chat" value="Enviar">
+            <input type="hidden" name=":id_dest" value="<?php echo $aux['id_dest']; ?>">
+            <input type="submit" name="enviar_men" value="Enviar">
         </form>
     </div>
+        <?php endif; ?>
 </body>
 </html>
