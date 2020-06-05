@@ -1,0 +1,44 @@
+DROP TABLE IF EXISTS departamentos;
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS incidencias;
+
+CREATE TABLE IF NOT EXISTS 
+usuarios (
+    id_usu int(5) PRIMARY KEY AUTO_INCREMENT,
+    nombre varchar(10) NOT NULL,
+    apellidos varchar(20) NOT NULL,
+    movil varchar(12) NOT NULL,
+    correo varchar(40) NOT NULL,
+    tipo varchar(2) DEFAULT 'em' NOT NULL,
+    clave varchar(70) NOT NULL
+    
+);
+
+
+CREATE TABLE IF NOT EXISTS 
+incidencias (
+    id_inc int(5) PRIMARY KEY AUTO_INCREMENT,
+    f_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    equipo varchar(15) NOT NULL,
+    ubicacion varchar(20) NOT NULL,
+    asunto varchar(20) NOT NULL,
+    prioridad varchar(8) DEFAULT 'media' NOT NULL,
+    estado varchar(15) DEFAULT 'pendiente'  NOT NULL,
+    gestor int(5) DEFAULT 1 NOT NULL,
+    FOREIGN KEY (gestor) REFERENCES usuarios (id_usu) ON DELETE CASCADE,    
+    id_usu int(5) NOT NULL,
+    FOREIGN KEY (id_usu) REFERENCES usuarios (id_usu) ON DELETE CASCADE
+    
+);
+
+
+CREATE TABLE IF NOT EXISTS mensajes ( 
+    id_men int(5) PRIMARY KEY AUTO_INCREMENT, 
+    id_rem int(5) NOT NULL, 
+    FOREIGN KEY (id_rem) REFERENCES usuarios(id_usu), 
+    id_dest int(5) NOT NULL,
+    FOREIGN KEY (id_dest) REFERENCES usuarios(id_usu),
+    mensaje varchar(300) NOT NULL, 
+    hora  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    leido char(1) DEFAULT 'n' NOT NULL
+);

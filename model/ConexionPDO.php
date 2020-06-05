@@ -5,7 +5,7 @@ class ConexionPDO {
     
     private function __construct($database){
         $dsn = "mysql:host=localhost;dbname=$database";
-        $this->id = new PDO($dsn,'gest','Nohay2sin3');
+        $this->id = new PDO($dsn,'jhostin','Jj/CvxuHq6G5');
     }
 
     public static function singleton($database){
